@@ -1,5 +1,6 @@
 /*
 *
+https://github.com/go-git/go-git
 https://git-scm.com/book/pt-br/v2/Fundamentos-de-Git-Vendo-o-histórico-de-Commits
 */
 package git
@@ -23,7 +24,7 @@ func IsLocalEqualsRemote(path, branch string) bool {
 }
 
 // TODO Clone()
-func Clone() {
+func Clone(dir, remote, branch string) {
 
 }
 
