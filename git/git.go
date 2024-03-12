@@ -12,12 +12,33 @@ import (
 	"strings"
 )
 
-func IsLocalEqualsRemote(path, branch string) bool {
-	cmd := Cmd(path, "git", "branch", "--show-current")
+type CloneAltMethod int
 
+const (
+	// RemoveAndClone remove current Path directory and clone it again
+	RemoveAndClone CloneAltMethod = iota
+	// Pull just pull when Path directory is found with the same Branch.
+	// If branches are different, the Clone alternative method switches to Checkout.
+	Pull
+	// Checkout the branch regardless of local branch
+	Checkout
+)
+
+type CloneOptions struct {
+	// Path is the directory where clone will be achieved
+	Path string
+	// URL is a possible remote endpoint repository to be cloned
+	URL string
+	// Branch indicates an alternative branch instead of default's one (main, master, or develop)
+	Branch string
+	// Method do some action when Path is found.
+	Method CloneAltMethod
+}
+
+func IsLocalBranchEqualsRemote(path, branch string) bool {
+	cmd := Cmd(path, "git", "branch", "--show-current")
 	if cmd.Error != nil {
-		Raise(cmd.Error)
-		Raise(fmt.Errorf("Não foi possível comparar as branches (local e remoto): " + branch + ", erro: " + cmd.Error.Error()))
+		Raise(fmt.Errorf("it was not possible to compare the branches (local and remote): " + branch + ", erro: " + cmd.Error.Error()))
 	}
 
 	return conv.IsEqualsValues(cmd.Output, branch)
@@ -25,6 +46,17 @@ func IsLocalEqualsRemote(path, branch string) bool {
 
 // TODO Clone()
 func Clone(dir, remote, branch string) {
+	//cmd := Cmd(dir, "git", "clone", remote, "-b", branch)
+	//if cmd.Error != nil {
+	//	Raise(fmt.Errorf("it was not possible to clone the repository: " + cmd.Error.Error()))
+	//}
+
+	cpt := CheckPathType(dir)
+	if DirType == cpt {
+		if IsLocalBranchEqualsRemote(dir, branch) {
+
+		}
+	}
 
 }
 
